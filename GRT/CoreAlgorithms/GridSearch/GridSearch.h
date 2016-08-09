@@ -33,6 +33,13 @@
 
 #include <functional>
 
+#if __GRT_EMBEDDED_BUILD__
+#define nullptr  0
+#define FUNCTION_PTR(ret,name,arg) ret(*name)(arg)
+#else
+#define FUNCTION_PTR(ret,name,arg) std::function<ret(arg)> name
+#endif
+	 
 GRT_BEGIN_NAMESPACE
 
 template< class T > 
@@ -76,7 +83,8 @@ template < class T >
 class GridSearchParam {
 public:
 
-    GridSearchParam( std::function< bool(T) > func = nullptr, GridSearchRange<T> range = GridSearchRange<T>() ){
+    //GridSearchParam( std::function<bool(T)>func = nullptr, GridSearchRange<T> range = GridSearchRange<T>() ){
+	GridSearchParam( FUNCTION_PTR(bool,func,T) = nullptr, GridSearchRange<T> range = GridSearchRange<T>() ){
         this->func = func;
         this->range = range;
     }
@@ -104,7 +112,8 @@ public:
 
     T get(){ return range.get(); }
 
-    std::function< bool(T) > func;
+    //std::function< bool(T) > func;
+	FUNCTION_PTR(bool,func,T);
     GridSearchRange<T> range;
 };
 
@@ -125,7 +134,8 @@ public:
         
     }
 
-    bool addParameter( std::function< bool(unsigned int) > f , GridSearchRange< unsigned int > range ){
+    //bool addParameter( std::function< bool(unsigned int) > f , GridSearchRange< unsigned int > range ){
+	bool addParameter(FUNCTION_PTR(bool,f,unsigned int) , GridSearchRange< unsigned int > range ){
         params.push_back( GridSearchParam<unsigned int>( f, range ) );
         return true;
     }
@@ -164,7 +174,8 @@ public:
         return true;
     }
 
-    bool setEvaluationFunction( std::function< Float () > f, SearchType type = MaxValueSearch ){
+    //bool setEvaluationFunction( std::function< Float () > f, SearchType type = MaxValueSearch ){
+	bool setEvaluationFunction( FUNCTION_PTR(Float,f,void), SearchType type = MaxValueSearch ){
         evalFunc = f;
         evalType = type;
         return true;
@@ -242,7 +253,8 @@ protected:
     }
 
     Vector< GridSearchParam<unsigned int> > params;
-    std::function< Float () >  evalFunc; 
+    //std::function< Float () >  evalFunc;
+	FUNCTION_PTR(Float,evalFunc,void);
     SearchType evalType;
     Float bestResult;
     T model;

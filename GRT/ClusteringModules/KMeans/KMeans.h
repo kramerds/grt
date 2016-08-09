@@ -176,7 +176,9 @@ public:
     using MLBase::saveModelToFile;
     using MLBase::loadModelFromFile;
     using MLBase::train;
+#ifndef __GRT_EMBEDDED_BUILD__
     using MLBase::train_;
+#endif
     using MLBase::predict;
     using MLBase::predict_;
 

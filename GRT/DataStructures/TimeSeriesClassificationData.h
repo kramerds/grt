@@ -82,6 +82,17 @@ public:
 	inline TimeSeriesClassificationSample& operator[] (const UINT &i){
 		return data[i];
 	}
+
+	/**
+	Returns the TimeSeriesClassificationSample at index i.
+	It is up to the user to ensure that i is within the range of [0 totalNumSamples-1]
+
+	@param i: the index of the training sample you want to access.  Must be within the range of [0 totalNumSamples-1]
+	@return a reference to the i'th TimeSeriesClassificationSample
+	*/
+	inline TimeSeriesClassificationSample & indexOf(const UINT &i) {
+		return data[i];
+	}
     
     /**
      Const Array Subscript Operator, returns the TimeSeriesClassificationSample at index i.
