@@ -50,11 +50,11 @@ public:
 		return *this;
 	}
 
-	inline double& operator[] (const UINT &n){
+	inline Float& operator[] (const UINT &n){
 		return sample[n];
 	}
 
-    	inline const double& operator[] (const UINT &n) const{
+    	inline const Float& operator[] (const UINT &n) const{
         	return sample[n];
     	}
 

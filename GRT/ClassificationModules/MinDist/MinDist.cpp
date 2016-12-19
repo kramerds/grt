@@ -177,7 +177,7 @@ bool MinDist::predict_(VectorFloat &inputVector){
     
     if( useScaling ){
         for(UINT n=0; n<numInputDimensions; n++){
-            inputVector[n] = grt_scale(inputVector[n], ranges[n].minValue, ranges[n].maxValue, 0.0, 1.0);
+            inputVector[n] = grt_scale(inputVector[n], ranges[n].minValue, ranges[n].maxValue, (Float)0.0, (Float)1.0);
         }
     }
     

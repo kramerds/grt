@@ -41,7 +41,11 @@ public:
     /**
      Default Constructor
     */
-	Matrix():errorLog("[ERROR Matrix]"){
+#ifndef __GRT_EMBEDDED_BUILD__
+        Matrix():errorLog("[ERROR Matrix]"){
+#else
+	Matrix(){
+#endif
         rows = 0;
         cols = 0;
         size = 0;
@@ -56,7 +60,11 @@ public:
      @param rows: sets the number of rows in the matrix, must be a value greater than zero
      @param cols: sets the number of columns in the matrix, must be a value greater than zero
     */
-	Matrix(const unsigned int rows,const unsigned int cols):errorLog("[ERROR Matrix]"){
+#ifndef __GRT_EMBEDDED_BUILD__
+        Matrix(const unsigned int rows,const unsigned int cols):errorLog("[ERROR Matrix]"){
+#else
+	Matrix(const unsigned int rows,const unsigned int cols){
+#endif
         dataPtr = NULL;
         rowPtr = NULL;
         resize(rows,cols);
@@ -67,7 +75,12 @@ public:
      
      @param rhs: the Matrix from which the values will be copied
     */
-	Matrix(const Matrix &rhs):errorLog("[ERROR Matrix]"){
+#ifndef __GRT_EMBEDDED_BUILD__
+        Matrix(const Matrix &rhs):errorLog("[ERROR Matrix]"){
+#else
+	Matrix(const Matrix &rhs){
+#endif
+	
         this->dataPtr = NULL;
         this->rowPtr = NULL;
         this->rows = 0;
@@ -84,7 +97,11 @@ public:
      
      @param data: the input data which will be copied to this Matrix instance
      */
-	Matrix( const Vector< Vector< T > > &data ):errorLog("[ERROR Matrix]"){
+#ifndef __GRT_EMBEDDED_BUILD__
+        Matrix( const Vector< Vector< T > > &data ):errorLog("[ERROR Matrix]"){
+#else
+	Matrix( const Vector< Vector< T > > &data ){
+#endif
 		this->dataPtr = NULL;
         this->rowPtr = NULL;
 		this->rows = 0;
@@ -232,7 +249,9 @@ public:
 	virtual bool resize(const unsigned int r,const unsigned int c){
         
 		if( r + c == 0 ){
+#ifndef __GRT_EMBEDDED_BUILD__
 			errorLog << "resize(...) - Failed to resize matrix, rows and cols == zero!" << std::endl;
+#endif
 			return false;
 		}
 
@@ -259,7 +278,9 @@ public:
                     cols = 0;
                     size = 0;
                     capacity = 0;
-					errorLog << "resize(const unsigned r,const unsigned int c) - Failed to allocate memory! r: " << r << " c: " << c << std::endl;
+#ifndef __GRT_EMBEDDED_BUILD__
+                    errorLog << "resize(const unsigned r,const unsigned int c) - Failed to allocate memory! r: " << r << " c: " << c << std::endl;
+#endif
                     throw GRT::Exception("Matrix::resize(const unsigned int r,const unsigned int c) - Failed to allocate memory!");
                     return false;
                 }
@@ -269,7 +290,9 @@ public:
                     cols = 0;
                     size = 0;
                     capacity = 0;
-					errorLog << "resize(const unsigned r,const unsigned int c) - Failed to allocate memory! r: " << r << " c: " << c << std::endl;
+#ifndef __GRT_EMBEDDED_BUILD__
+                    errorLog << "resize(const unsigned r,const unsigned int c) - Failed to allocate memory! r: " << r << " c: " << c << std::endl;
+#endif
                     throw Exception("Matrix::resize(const unsigned int r,const unsigned int c) - Failed to allocate memory!");
                     return false;
                 }
@@ -285,11 +308,15 @@ public:
                 return true;
                 
             }catch( std::exception& e ){
+#ifndef __GRT_EMBEDDED_BUILD__
                 errorLog << "resize: Failed to allocate memory. Error: " << e.what() << " rows: " << r << " cols: " << c <<  std::endl;
+#endif
                 clear();
                 return false;
             }catch( ... ){
+#ifndef __GRT_EMBEDDED_BUILD__
                 errorLog << "resize: Failed to allocate memory." << std::endl;
+#endif
                 clear();
                 return false;
             }
@@ -591,7 +618,9 @@ protected:
 	unsigned int capacity;  ///< The capacity of the Matrix, this will be the number of rows, not the actual memory size
     T *dataPtr;             ///< A pointer to the raw data
     T **rowPtr;             ///< A pointer to each row in the data
+#ifndef __GRT_EMBEDDED_BUILD__
     ErrorLog errorLog;
+#endif
 };
 
 GRT_END_NAMESPACE

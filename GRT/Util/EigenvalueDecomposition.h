@@ -114,7 +114,7 @@ protected:
     }
     template< class T >
     inline T hypot(const T &a,const T &b){
-        return sqrt( (a*a)+(b*b) );
+        return grt_sqrt( (a*a)+(b*b) );
     }
     
     int n;

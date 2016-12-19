@@ -24,16 +24,20 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 GRT_BEGIN_NAMESPACE
    
 MatrixFloat::MatrixFloat(){
+#ifndef __GRT_EMBEDDED_BUILD__
     warningLog.setProceedingText("[WARNING MatrixFloat]");
     errorLog.setProceedingText("[ERROR MatrixFloat]");
+#endif
     this->dataPtr = NULL;
     this->rows = 0;
     this->cols = 0;
 }
     
 MatrixFloat::MatrixFloat(const unsigned int rows,const unsigned int cols){
+#ifndef __GRT_EMBEDDED_BUILD__
     warningLog.setProceedingText("[WARNING MatrixFloat]");
     errorLog.setProceedingText("[ERROR MatrixFloat]");
+#endif
     this->dataPtr = NULL;
     if( rows > 0 && cols > 0 ){
         resize(rows, cols);
@@ -41,16 +45,20 @@ MatrixFloat::MatrixFloat(const unsigned int rows,const unsigned int cols){
 }
     
 MatrixFloat::MatrixFloat(const MatrixFloat &rhs){
+#ifndef __GRT_EMBEDDED_BUILD__
     warningLog.setProceedingText("[WARNING MatrixFloat]");
     errorLog.setProceedingText("[ERROR MatrixFloat]");
+#endif
     this->dataPtr = NULL;
     this->rowPtr = NULL;
     this->copy( rhs );
 }
     
 MatrixFloat::MatrixFloat(const Matrix< Float > &rhs){
+#ifndef __GRT_EMBEDDED_BUILD__
     warningLog.setProceedingText("[WARNING MatrixFloat]");
     errorLog.setProceedingText("[ERROR MatrixFloat]");
+#endif
     this->dataPtr = NULL;
     this->rowPtr = NULL;
     this->copy( rhs );
@@ -210,7 +218,9 @@ VectorFloat MatrixFloat::multiple(const VectorFloat &b) const{
     const unsigned int K = (unsigned int)b.size();
     
     if( N != K ){
+#ifndef __GRT_EMBEDDED_BUILD__
         warningLog << "multiple(vector b) - The size of b (" << b.size() << ") does not match the number of columns in this matrix (" << N << ")" << std::endl;
+#endif
         return VectorFloat();
     }
     
@@ -237,7 +247,9 @@ MatrixFloat MatrixFloat::multiple(const MatrixFloat &b) const{
     const unsigned int L = b.getNumCols();
     
     if( N != K ) {
+#ifndef __GRT_EMBEDDED_BUILD__
         errorLog << "multiple(MatrixFloat b) - The number of rows in b (" << K << ") does not match the number of columns in this matrix (" << N << ")" << std::endl;
+#endif
         return MatrixFloat();
     }
     
@@ -266,12 +278,16 @@ bool MatrixFloat::multiple(const MatrixFloat &a,const MatrixFloat &b,const bool 
     const unsigned int L = b.getNumCols();
     
     if( N != K ) {
+#ifndef __GRT_EMBEDDED_BUILD__
         errorLog << "multiple(const MatrixFloat &a,const MatrixFloat &b,const bool aTranspose) - The number of rows in a (" << K << ") does not match the number of columns in matrix b (" << N << ")" << std::endl;
+#endif
         return false;
     }
     
     if( !resize( M, L ) ){
+#ifndef __GRT_EMBEDDED_BUILD__
         errorLog << "multiple(const MatrixFloat &b,const MatrixFloat &c,const bool bTranspose) - Failed to resize matrix!" << std::endl;
+#endif
         return false;
     }
     
@@ -311,12 +327,16 @@ bool MatrixFloat::multiple(const MatrixFloat &a,const MatrixFloat &b,const bool 
 bool MatrixFloat::add(const MatrixFloat &b){
     
     if( b.getNumRows() != rows ){
+#ifndef __GRT_EMBEDDED_BUILD__
         errorLog << "add(const MatrixFloat &b) - Failed to add matrix! The rows do not match!" << std::endl;
+#endif
         return false;
     }
     
     if( b.getNumCols() != cols ){
+#ifndef __GRT_EMBEDDED_BUILD__
         errorLog << "add(const MatrixFloat &b) - Failed to add matrix! The rows do not match!" << std::endl;
+#endif
         return false;
     }
     
@@ -338,14 +358,18 @@ bool MatrixFloat::add(const MatrixFloat &a,const MatrixFloat &b){
     const unsigned int N = a.getNumCols();
     
     if( M != b.getNumRows() ){
+#ifndef __GRT_EMBEDDED_BUILD__
         errorLog << "add(const MatrixFloat &a,const MatrixFloat &b) - Failed to add matrix! The rows do not match!";
         errorLog << " a rows: " << M << " b rows: " << b.getNumRows() << std::endl;
+#endif
         return false;
     }
     
     if( N != b.getNumCols() ){
+#ifndef __GRT_EMBEDDED_BUILD__
         errorLog << "add(const MatrixFloat &a,const MatrixFloat &b) - Failed to add matrix! The columns do not match!";
         errorLog << " a cols: " << N << " b cols: " << b.getNumCols() << std::endl;
+#endif
         return false;
     }
     
@@ -368,14 +392,18 @@ bool MatrixFloat::add(const MatrixFloat &a,const MatrixFloat &b){
 bool MatrixFloat::subtract(const MatrixFloat &b){
     
     if( b.getNumRows() != rows ){
+#ifndef __GRT_EMBEDDED_BUILD__
         errorLog << "subtract(const MatrixFloat &b) - Failed to add matrix! The rows do not match!" << std::endl;
         errorLog << " rows: " << rows << " b rows: " << b.getNumRows() << std::endl;
+#endif
         return false;
     }
     
     if( b.getNumCols() != cols ){
+#ifndef __GRT_EMBEDDED_BUILD__
         errorLog << "subtract(const MatrixFloat &b) - Failed to add matrix! The rows do not match!" << std::endl;
         errorLog << "  cols: " << cols << " b cols: " << b.getNumCols() << std::endl;
+#endif
         return false;
     }
     
@@ -398,14 +426,18 @@ bool MatrixFloat::subtract(const MatrixFloat &a,const MatrixFloat &b){
     const unsigned int N = a.getNumCols();
     
     if( M != b.getNumRows() ){
+#ifndef __GRT_EMBEDDED_BUILD__
         errorLog << "subtract(const MatrixFloat &a,const MatrixFloat &b) - Failed to add matrix! The rows do not match!";
         errorLog << " a rows: " << M << " b rows: " << b.getNumRows() << std::endl;
+#endif
         return false;
     }
     
     if( N != b.getNumCols() ){
+#ifndef __GRT_EMBEDDED_BUILD__
         errorLog << "subtract(const MatrixFloat &a,const MatrixFloat &b) - Failed to add matrix! The columns do not match!";
         errorLog << " a cols: " << N << " b cols: " << b.getNumCols() << std::endl;
+#endif
         return false;
     }
     
@@ -538,7 +570,9 @@ bool MatrixFloat::load(const std::string &filename,const char seperator){
     //Open the file
     std::ifstream file( filename.c_str(), std::ifstream::in );
     if ( !file.is_open() ){
+#ifndef __GRT_EMBEDDED_BUILD__
         warningLog << "parseFile(...) - Failed to open file: " << filename << std::endl;
+#endif
         return false;
     }
     
@@ -553,7 +587,9 @@ bool MatrixFloat::load(const std::string &filename,const char seperator){
     
     //Count the number of columns in the first row
     if( !getline(file,line) ){
+#ifndef __GRT_EMBEDDED_BUILD__
         warningLog << "parseFile(...) - Failed to read first row!" << std::endl;
+#endif
         return false;
     }
     
@@ -577,7 +613,9 @@ bool MatrixFloat::load(const std::string &filename,const char seperator){
     
     //Assign the memory
     if( !resize(rowCounter, columnCounter) ){
+#ifndef __GRT_EMBEDDED_BUILD__
         warningLog << "parseFile(...) - Failed to resize memory!" << std::endl;
+#endif
         return false;
     }
     
@@ -606,8 +644,10 @@ bool MatrixFloat::load(const std::string &filename,const char seperator){
         //Check to make sure all the columns are consistent
         if( columnCounter != vec.size() ){
             clear();
+#ifndef __GRT_EMBEDDED_BUILD__
             warningLog << "parseFile(...) - Found inconsistent column size in row " << rowCounter;
             warningLog << " ColumnSize: " << columnCounter << " LastColumnSize: " << vec.size() << std::endl;
+#endif
             return false;
         }
         

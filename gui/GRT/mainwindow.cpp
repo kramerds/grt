@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-
+#include <GRT/GRT.h>
+using namespace GRT;
+using namespace std;
 unsigned int MainWindow::numInstances = 0;
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow), model(NULL), pcaGraph(NULL)
@@ -3788,4 +3790,127 @@ void MainWindow::notify(const GRT::InfoLogMessage &log){
     std::unique_lock< std::mutex > lock( mutex );
     std::string message = log.getProceedingText() + " " + log.getMessage();
     updateInfoText( message );
+}
+
+void MainWindow::on_dtwTestButton_clicked()
+{
+    DTW * dtw = NULL;
+    TimeSeriesClassificationData * trainingData = NULL;
+    TimeSeriesClassificationData * testData = NULL;
+    TimeSeriesClassificationSample * classificationSample = NULL;
+
+    //Create a new DTW instance, using the default parameters
+    dtw = new DTW();
+
+    //Turn on null rejection, this lets the classifier output the predicted class label of 0 when the likelihood of a gesture is low
+    dtw->enableNullRejection(true);
+
+    //Set the null rejection coefficient to 3, this controls the thresholds for the automatic null rejection
+    //You can increase this value if you find that your real-time gestures are not being recognized
+    //If you are getting too many false positives then you should decrease this value
+    dtw->setNullRejectionCoeff(3);
+
+    //Turn on the automatic data triming, this will remove any sections of none movement from the start and end of the training samples
+    dtw->enableTrimTrainingData(true, 0.1, 90);
+
+    //Offset the timeseries data by the first sample, this makes your gestures (more) invariant to the location the gesture is performed
+    dtw->setOffsetTimeseriesUsingFirstSample(true);
+
+    //Load some training data to train the classifier - the DTW uses TimeSeriesClassificationData
+    trainingData = new TimeSeriesClassificationData();
+    testData = new TimeSeriesClassificationData();
+    classificationSample = new TimeSeriesClassificationSample();
+
+    if (!trainingData->load("G:\\training.grd")) {
+        cout << "Failed to load training data!" << endl;
+        return;
+    }
+
+    //Use 20% of the training dataset to create a test dataset
+    *testData = trainingData->partition(80);
+
+    //Trim the training data for any sections of non-movement at the start or end of the recordings
+    dtw->enableTrimTrainingData(true, 0.1, 90);
+
+    //Train the classifier
+    if (!dtw->train(*trainingData)) {
+        cout << "Failed to train classifier!" << endl;
+        return;
+    }
+
+    //Use the test dataset to test the DTW model
+    double accuracy = 0;
+    for (UINT i = 0; i<testData->getNumSamples(); i++) {
+        //Get the i'th test sample - this is a timeseries
+        *classificationSample = testData->indexOf(i);
+        UINT classLabel = classificationSample->getClassLabel();
+        MatrixDouble timeseries = classificationSample->getData();
+
+        //Perform a prediction using the classifier
+        if (!dtw->predict(timeseries)) {
+            cout << "Failed to perform prediction for test sampel: " << i << "\n";
+            return;
+        }
+
+        //Get the predicted class label
+        UINT predictedClassLabel = dtw->getPredictedClassLabel();
+        double maximumLikelihood = dtw->getMaximumLikelihood();
+        VectorDouble classLikelihoods = dtw->getClassLikelihoods();
+        VectorDouble classDistances = dtw->getClassDistances();
+
+        //Update the accuracy
+        if (classLabel == predictedClassLabel) accuracy++;
+
+        cout << "TestSample: " << i << "\tClassLabel: " << classLabel << "\tPredictedClassLabel: " << predictedClassLabel << "\tMaximumLikelihood: " << maximumLikelihood << endl;
+
+    }
+
+    cout << "Test Accuracy: " << accuracy / double(testData->getNumSamples())*100.0 << "%" << endl;
+
+    return;
+}
+
+void MainWindow::on_pipelineTestButton_clicked()
+{
+    GestureRecognitionPipeline pipeline;
+
+    TimeSeriesClassificationData trainingData;
+
+    pipeline.loadPipelineFromFile("E:\\home\\TrichIt!\\training data\\pipeline.grp");
+
+    if (!trainingData.load("E:\\home\\TrichIt!\\training data\\hairpull.grd")) {
+        cout << "Failed to load training data!" << endl;
+        return;
+    }
+
+
+    //Use the test dataset to test the DTW model
+    double accuracy = 0;
+    for (UINT i = 0; i<trainingData.getNumSamples(); i++) {
+            //Get the i'th test sample - this is a timeseries
+            UINT classLabel = trainingData[i].getClassLabel();
+            MatrixDouble timeseries = trainingData[i].getData();
+
+        //Perform a prediction using the classifier
+        if (!pipeline.predict(timeseries)) {
+            cout << "Failed to perform prediction for test sampel: " << i << "\n";
+            return;
+        }
+
+        //Get the predicted class label
+        UINT predictedClassLabel = pipeline.getPredictedClassLabel();
+        double maximumLikelihood = pipeline.getMaximumLikelihood();
+        VectorDouble classLikelihoods = pipeline.getClassLikelihoods();
+        VectorDouble classDistances = pipeline.getClassDistances();
+
+        //Update the accuracy
+        if (classLabel == predictedClassLabel) accuracy++;
+
+        cout << "TestSample: " << i << "\tClassLabel: " << classLabel << "\tPredictedClassLabel: " << predictedClassLabel << "\tMaximumLikelihood: " << maximumLikelihood << endl;
+
+    }
+
+    cout << "Test Accuracy: " << accuracy / double(trainingData.getNumSamples())*100.0 << "%" << endl;
+
+    return;
 }

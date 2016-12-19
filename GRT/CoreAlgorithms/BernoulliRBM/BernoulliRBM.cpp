@@ -59,7 +59,7 @@ bool BernoulliRBM::predict_(VectorFloat &inputData,VectorFloat &outputData){
     //Scale the data if needed
     if( useScaling ){
         for(UINT i=0; i<numVisibleUnits; i++){
-            inputData[i] = grt_scale(inputData[i],ranges[i].minValue,ranges[i].maxValue,0.0,1.0);
+            inputData[i] = grt_scale(inputData[i],ranges[i].minValue,ranges[i].maxValue,(Float)0.0,(Float)1.0);
         }
     }
     
@@ -164,7 +164,7 @@ bool BernoulliRBM::train_(MatrixFloat &data){
     if( useScaling ){
         for(UINT i=0; i<numTrainingSamples; i++){
             for(UINT j=0; j<numInputDimensions; j++){
-                data[i][j] = grt_scale(data[i][j], ranges[j].minValue, ranges[j].maxValue, 0.0, 1.0);
+                data[i][j] = grt_scale(data[i][j], ranges[j].minValue, ranges[j].maxValue, (Float)0.0, (Float)1.0);
             }
         }
     }

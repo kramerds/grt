@@ -156,10 +156,10 @@ public:
     GRT_API MinMax getMinMax() const;
     
 protected:
-  
+#ifndef __GRT_EMBEDDED_BUILD__
     WarningLog warningLog;
     ErrorLog errorLog;
-    
+#endif
 };
     
 GRT_END_NAMESPACE

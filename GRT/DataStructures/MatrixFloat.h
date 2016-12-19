@@ -336,9 +336,10 @@ protected:
         s >> d;
         return d;
     }
-  
+#ifndef __GRT_EMBEDDED_BUILD__
     WarningLog warningLog;
     ErrorLog errorLog;
+#endif
     
 };
     

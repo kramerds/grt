@@ -57,7 +57,7 @@ public:
      @param useNullRejection: sets if null rejection will be used for the realtime prediction.  If useNullRejection is set to true then the predictedClassLabel will be set to 0 (which is the default null label) if the distance between the inputVector and the top K datum is greater than the null rejection threshold for the top predicted class.  The null rejection threshold is computed for each class during the training phase. Default value is useNullRejection = false
      @param nullRejectionCoeff: sets the null rejection coefficient, this is a multipler controlling the null rejection threshold for each class.  This will only be used if the useNullRejection parameter is set to true.  Default value is nullRejectionCoeff = 10.0
      */
-	ANBC(bool useScaling=false,bool useNullRejection=false,double nullRejectionCoeff=10.0);
+    ANBC(bool useScaling=false,bool useNullRejection=false,Float nullRejectionCoeff=10.0);
     
     /**
      Defines the copy constructor.
@@ -170,7 +170,7 @@ public:
      
      @return returns true if the gamma parameter was updated successfully, false otherwise
     */
-    bool setNullRejectionCoeff(double nullRejectionCoeff);
+    bool setNullRejectionCoeff(Float nullRejectionCoeff);
     
     /**
      Sets the weights for the training and prediction.

@@ -293,6 +293,7 @@ bool SVM::validateProblemAndParameters(){
 
 bool SVM::trainSVM(){
 
+#if USE_SMV
     crossValidationResult = 0;
 
     //Erase any previous models
@@ -372,10 +373,15 @@ bool SVM::trainSVM(){
     }
 
     return trained;
+
+#else
+    return 0;
+#endif
 }
     
 bool SVM::predictSVM(VectorFloat &inputVector){
 
+#if USE_SMV
 		if( !trained || inputVector.size() != numInputDimensions ) return false;
 
 		svm_node *x = NULL;
@@ -406,10 +412,15 @@ bool SVM::predictSVM(VectorFloat &inputVector){
 		delete[] x;
 
 		return true;
+#else
+        return false;
+#endif
+
 }
 
 bool SVM::predictSVM(VectorFloat &inputVector,Float &maxProbability, VectorFloat &probabilites){
 
+#if USE_SMV
 		if( !trained || param.probability == 0 || inputVector.size() != numInputDimensions ) return false;
 
 		Float *prob_estimates = NULL;
@@ -461,10 +472,14 @@ bool SVM::predictSVM(VectorFloat &inputVector,Float &maxProbability, VectorFloat
 		delete[] x;
 
 		return true;
+#else
+    return false;
+#endif
 }
     
 bool SVM::convertClassificationDataToLIBSVMFormat(ClassificationData &trainingData){
     
+#if USE_SMV
     //clear any previous problems
     deleteProblemSet();
     
@@ -495,10 +510,13 @@ bool SVM::convertClassificationDataToLIBSVMFormat(ClassificationData &trainingDa
     }
     
     return true;
+#else
+    return false;
+#endif
 }
 
 bool SVM::saveModelToFile( std::fstream &file ) const{
-    
+#if USE_SMV
     if( !file.is_open() ){
         return false;
     }
@@ -623,10 +641,13 @@ bool SVM::saveModelToFile( std::fstream &file ) const{
     }
     
     return true;
+#else
+    return 0;
+#endif
 }
     
 bool SVM::loadModelFromFile( std::fstream &file ){
-    
+#if USE_SMV
     std::string word;
     UINT numSV = 0;
     UINT halfNumClasses = 0;
@@ -928,6 +949,9 @@ bool SVM::loadModelFromFile( std::fstream &file ){
     }
     
     return true;
+#else
+    return false;
+#endif
 }
     
 bool SVM::clear(){
@@ -1158,7 +1182,7 @@ bool SVM::validateKernelType(const UINT kernelType){
 }
     
 struct svm_model* SVM::deepCopyModel() const{
-    
+#if USE_SMV
     if( model == NULL ) return NULL;
     
     UINT halfNumClasses = 0;
@@ -1259,10 +1283,13 @@ struct svm_model* SVM::deepCopyModel() const{
     m->free_sv = 1;
     
     return m;
+#else
+    return false;
+#endif
 }
 
 bool SVM::deepCopyProblem( const struct svm_problem &source, struct svm_problem &target, const unsigned int numInputDimensions ) const{
-
+#if USE_SMV
     //Cleanup the target memory
     if( target.y != NULL ){
         delete[] target.y;
@@ -1296,6 +1323,9 @@ bool SVM::deepCopyProblem( const struct svm_problem &source, struct svm_problem 
     }
 
     return true;
+#else
+    return false;
+#endif
 }
 
 bool SVM::deepCopyParam( const svm_parameter &source_param, svm_parameter &target_param ) const{
@@ -1337,7 +1367,7 @@ bool SVM::deepCopyParam( const svm_parameter &source_param, svm_parameter &targe
 }
     
 bool SVM::loadLegacyModelFromFile( std::fstream &file ){
-    
+#if USE_SMV
     std::string word;
     
     UINT numSV = 0;
@@ -1642,6 +1672,9 @@ bool SVM::loadLegacyModelFromFile( std::fstream &file ){
     trained = true;
     
     return true;
+#else
+    return false;
+#endif
 }
     
 GRT_END_NAMESPACE

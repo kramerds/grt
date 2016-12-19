@@ -53,10 +53,12 @@ GRT_BEGIN_NAMESPACE
 
 //Define any common GRT OS independent typedefs
 #ifdef __GRT_EMBEDDED_BUILD__
-typedef double Float; ///<This typedef is used to set floating-point precision throughout the GRT
+//typedef double Float; ///<This typedef is used to set floating-point precision throughout the GRT
+typedef float Float; ///<This typedef is used to set floating-point precision throughout the GRT
 typedef long double LongFloat; ///<This typedef is used to set long floating-point precision throughout the GRT
 #else
-typedef double Float; ///<This typedef is used to set floating-point precision throughout the GRT
+//typedef double Float; ///<This typedef is used to set floating-point precision throughout the GRT
+typedef float Float; ///<This typedef is used to set floating-point precision throughout the GRT
 typedef long double LongFloat; ///<This typedef is used to set long floating-point precision throughout the GRT
 #endif
 	
@@ -89,15 +91,17 @@ public:
 #ifdef __GRT_EMBEDDED_BUILD__
 inline Float grt_sqr( const Float &x ){ return x*x; }
 
-inline Float grt_sqrt( const Float &x ){ return sqrtf(x); }
+inline Float grt_sqrt( const Float &x ){ return sqrt( x ); }
+//inline Float grt_sqrt( const Float &x ){ float t = x; arm_sqrt_f32(t,&t); return t; }
+//inline Float grt_sqrt( const Float &x ){ return sqrt(x); }
 
-inline Float grt_antilog( const Float &x ){ return expf( x ); }
+inline Float grt_exp( const Float &x ){ return exp( x ); }
 
-inline Float grt_exp( const Float &x ){ return expf( x ); }
+inline Float grt_antilog( const Float &x ){ return grt_exp( x ); }
 
-inline Float  grt_log( const Float &x ){ return logf( x ); }
+inline Float  grt_log( const Float &x ){ return log( x ); }
 
-inline Float grt_sigmoid( const Float &x ) { return 1.0 / (1.0 + expf(-x)); }
+inline Float grt_sigmoid( const Float &x ) { return 1.0 / (1.0 + grt_exp(-x)); }
 
 #else
 
@@ -107,11 +111,11 @@ inline Float grt_sqrt( const Float &x ){ return sqrt(x); }
 
 inline Float grt_antilog( const Float &x ){ return exp( x ); }
 
-inline Float grt_exp( const Float &x ){ return exp( x ); }
+inline Float grt_exp( const Float &x ){ return grt_exp( x ); }
 
 inline Float  grt_log( const Float &x ){ return log( x ); }
 
-inline Float grt_sigmoid( const Float &x ) { return 1.0 / (1.0 + exp(-x)); }
+inline Float grt_sigmoid( const Float &x ) { return 1.0 / (1.0 + grt_exp(-x)); }
 
 #endif
 

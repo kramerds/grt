@@ -44,7 +44,7 @@ PrincipalComponentAnalysis::~PrincipalComponentAnalysis(){
 	
 }
 
-bool PrincipalComponentAnalysis::computeFeatureVector(const MatrixFloat &data,double maxVariance,bool normData){
+bool PrincipalComponentAnalysis::computeFeatureVector(const MatrixFloat &data,Float maxVariance,bool normData){
     trained = false;
     this->maxVariance = maxVariance;
     this->normData = normData;

@@ -116,7 +116,7 @@ bool GMM::predict_(VectorFloat &x){
     
     if( useScaling ){
         for(UINT i=0; i<numInputDimensions; i++){
-            x[i] = grt_scale(x[i], ranges[i].minValue, ranges[i].maxValue, GMM_MIN_SCALE_VALUE, GMM_MAX_SCALE_VALUE);
+            x[i] = grt_scale(x[i], ranges[i].minValue, ranges[i].maxValue, (Float)GMM_MIN_SCALE_VALUE, (Float)GMM_MAX_SCALE_VALUE);
         }
     }
 

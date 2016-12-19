@@ -60,7 +60,7 @@ int main (int argc, const char * argv[])
 	PrincipalComponentAnalysis pca;
 	
     //Run pca on the input data, setting the maximum variance value to 95% of the variance
-	if( !pca.computeFeatureVector( data, 0.95 ) ){
+	if( !pca.computeFeatureVector( data, (Float)0.95 ) ){
 		cout << "ERROR: Failed to compute feature vector!\n";
 		return EXIT_FAILURE;
 	}

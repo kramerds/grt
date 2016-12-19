@@ -505,7 +505,6 @@ bool DTW::predict_( VectorFloat &inputVector ){
             predictionTimeSeries[i][j] = continuousInputDataBuffer[i][j];
         }
     }
-
     //Run the prediction
     return predict( predictionTimeSeries );
 
@@ -597,7 +596,8 @@ Float DTW::computeDistance(MatrixFloat &timeSeriesA,MatrixFloat &timeSeriesB,Mat
 					for(k=0; k< C; k++){
 						distanceMatrix[i][j] += SQR( timeSeriesA[i][k]-timeSeriesB[j][k] );
 					}
-					distanceMatrix[i][j] = sqrt( distanceMatrix[i][j] );
+                                        
+					distanceMatrix[i][j] = grt_sqrt( distanceMatrix[i][j] );
 				}
 			}
 			break;
@@ -619,8 +619,8 @@ Float DTW::computeDistance(MatrixFloat &timeSeriesA,MatrixFloat &timeSeriesB,Mat
 	}
 
     //Run the recursive search function to build the cost matrix
-    Float distance = sqrt( d(M-1,N-1,distanceMatrix,M,N) );
-
+    Float distance = grt_sqrt( d(M-1,N-1,distanceMatrix,M,N) );
+    
     if( grt_isinf(distance) || grt_isnan(distance) ){
         warningLog << "DTW computeDistance(...) - Distance Matrix Values are INF!" << std::endl;
         return INFINITY;
@@ -814,7 +814,7 @@ void DTW::scaleData(MatrixFloat &data,MatrixFloat &scaledData){
 	//Scale the data using the min and max values
 	for(UINT i=0; i<R; i++)
 		for(UINT j=0; j<C; j++)
-			scaledData[i][j] = grt_scale(data[i][j],ranges[j].minValue,ranges[j].maxValue,0.0,1.0);
+            scaledData[i][j] = grt_scale(data[i][j],ranges[j].minValue,ranges[j].maxValue,(Float)0.0,(Float)1.0);
 
 }
 

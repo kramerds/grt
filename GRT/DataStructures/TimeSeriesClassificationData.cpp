@@ -21,6 +21,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define GRT_DLL_EXPORTS
 #include "TimeSeriesClassificationData.h"
 
+#ifdef __GRT_EMBEDDED_BUILD__
+#include "FatFs.h"
+#endif
+
 GRT_BEGIN_NAMESPACE
 
 TimeSeriesClassificationData::TimeSeriesClassificationData(UINT numDimensions,std::string datasetName,std::string infoText){
@@ -552,7 +556,7 @@ bool TimeSeriesClassificationData::loadDatasetFromFile(const std::string filenam
 	file.close();
 	return true;
 }
-    
+
 bool TimeSeriesClassificationData::saveDatasetToCSVFile(const std::string &filename) const{
     
     std::fstream file;

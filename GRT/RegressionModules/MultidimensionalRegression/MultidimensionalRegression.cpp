@@ -183,7 +183,7 @@ bool MultidimensionalRegression::predict_(VectorFloat &inputVector){
     
     if( useScaling ){
         for(UINT n=0; n<numInputDimensions; n++){
-            inputVector[n] = grt_scale(inputVector[n], inputVectorRanges[n].minValue, inputVectorRanges[n].maxValue, 0.0, 1.0);
+            inputVector[n] = grt_scale(inputVector[n], inputVectorRanges[n].minValue, inputVectorRanges[n].maxValue, (Float)0.0, (Float)1.0);
         }
     }
     
@@ -196,7 +196,7 @@ bool MultidimensionalRegression::predict_(VectorFloat &inputVector){
     
     if( useScaling ){
         for(UINT n=0; n<numOutputDimensions; n++){
-            regressionData[n] = grt_scale(regressionData[n], 0.0, 1.0, targetVectorRanges[n].minValue, targetVectorRanges[n].maxValue);
+            regressionData[n] = grt_scale(regressionData[n], (Float)0.0, (Float)1.0, targetVectorRanges[n].minValue, targetVectorRanges[n].maxValue);
         }
     }
     

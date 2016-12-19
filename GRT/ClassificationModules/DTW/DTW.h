@@ -379,7 +379,6 @@ protected:
 	UINT				smoothingFactor;		//The smoothing factor if smoothing is used
 	UINT				distanceMethod;			//The distance method to be used (should be of enum DISTANCE_METHOD)
 	UINT				averageTemplateLength;	//The overall average template length (over all the templates)
-	
 public:
 	enum DistanceMethods{ABSOLUTE_DIST=0,EUCLIDEAN_DIST,NORM_ABSOLUTE_DIST};
     enum RejectionModes{TEMPLATE_THRESHOLDS=0,CLASS_LIKELIHOODS,THRESHOLDS_AND_LIKELIHOODS};

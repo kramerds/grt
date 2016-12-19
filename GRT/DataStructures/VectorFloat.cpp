@@ -25,25 +25,33 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 GRT_BEGIN_NAMESPACE
    
 VectorFloat::VectorFloat(){
+#ifndef __GRT_EMBEDDED_BUILD__
     warningLog.setProceedingText("[WARNING VectorFloat]");
     errorLog.setProceedingText("[ERROR VectorFloat]");
+#endif
 }
     
 VectorFloat::VectorFloat(const size_type size){
+#ifndef __GRT_EMBEDDED_BUILD__
     warningLog.setProceedingText("[WARNING VectorFloat]");
     errorLog.setProceedingText("[ERROR VectorFloat]");
+#endif
     resize( size );
 }
 
 VectorFloat::VectorFloat( const size_type size, const Float &value ){
+#ifndef __GRT_EMBEDDED_BUILD__
     warningLog.setProceedingText("[WARNING VectorFloat]");
     errorLog.setProceedingText("[ERROR VectorFloat]");
+#endif
     resize( size, value );
 }
     
 VectorFloat::VectorFloat(const VectorFloat &rhs):Vector(rhs){
+#ifndef __GRT_EMBEDDED_BUILD__
     warningLog.setProceedingText("[WARNING VectorFloat]");
     errorLog.setProceedingText("[ERROR VectorFloat]");
+#endif
 }
 
 VectorFloat::~VectorFloat(){
@@ -180,7 +188,9 @@ bool VectorFloat::save(const std::string &filename) const {
     const size_type N = this->size();
 
     if( N == 0 ){
+#ifndef __GRT_EMBEDDED_BUILD__
         warningLog << "save(...) - Vector is empty, nothing to save!" << std::endl;
+#endif
         return false;
     }
     
@@ -209,7 +219,9 @@ bool VectorFloat::load(const std::string &filename,const char seperator){
     //Open the file
     std::ifstream file( filename.c_str(), std::ifstream::in );
     if ( !file.is_open() ){
+#ifndef __GRT_EMBEDDED_BUILD__
         warningLog << "load(...) - Failed to open file: " << filename << std::endl;
+#endif
         return false;
     }
     
@@ -223,7 +235,9 @@ bool VectorFloat::load(const std::string &filename,const char seperator){
     
     //Get the data, for a vector it should just be one line
     if( !getline(file,line) ){
+#ifndef __GRT_EMBEDDED_BUILD__
         warningLog << "load(...) - Failed to read first row!" << std::endl;
+#endif
         return false;
     }
     
@@ -255,7 +269,9 @@ bool VectorFloat::load(const std::string &filename,const char seperator){
     
     //Assign the memory
     if( !resize( numElements ) ){
+#ifndef __GRT_EMBEDDED_BUILD__
         warningLog << "load(...) - Failed to resize memory!" << std::endl;
+#endif
         return false;
     }
         

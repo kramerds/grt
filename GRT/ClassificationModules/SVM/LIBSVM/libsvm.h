@@ -83,7 +83,7 @@ extern int libsvm_version;
 struct svm_node
 {
 	int index;
-	double value;
+    double value;
 };
 
 struct svm_problem
@@ -94,7 +94,7 @@ struct svm_problem
     }
 
 	int l;
-	double *y;
+    double *y;
 	struct svm_node **x;
 };
 
@@ -111,10 +111,10 @@ struct svm_parameter
 	int kernel_type;
 	int degree;	/* for poly */
 	double gamma;	/* for poly/rbf/sigmoid */
-	double coef0;	/* for poly/sigmoid */
+    double coef0;	/* for poly/sigmoid */
 
 	/* these are for training only */
-	double cache_size; /* in MB */
+    double cache_size; /* in MB */
 	double eps;	/* stopping criteria */
 	double C;	/* for C_SVC, EPSILON_SVR and NU_SVR */
 	int nr_weight;		/* for C_SVC */

@@ -300,6 +300,10 @@ private slots:
     void coreTick();
     void updateData( const GRT::VectorDouble &data );
     void updateTargetVector( const GRT::VectorDouble &targetVector );
+    
+    void on_dtwTestButton_clicked();
+
+    void on_pipelineTestButton_clicked();
 
 private:
     bool initMainMenu();

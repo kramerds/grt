@@ -369,7 +369,7 @@ bool KMeansFeatures::train_(MatrixFloat &trainingData){
     if( useScaling ){
         for(UINT i=0; i<M; i++){
             for(UINT j=0; j<N; j++){
-                trainingData[i][j] = grt_scale(trainingData[i][j],ranges[j].minValue,ranges[j].maxValue,0.0,1.0);
+                trainingData[i][j] = grt_scale(trainingData[i][j],ranges[j].minValue,ranges[j].maxValue,(Float)0.0,(Float)1.0);
             }
         }
     }

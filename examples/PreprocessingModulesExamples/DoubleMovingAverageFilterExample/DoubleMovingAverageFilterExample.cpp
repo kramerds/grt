@@ -64,6 +64,6 @@ int main (int argc, const char * argv[])
     
     //We can then load the settings later if needed
     filter.load("DoubleMovingAverageFilterSettings.grt");
-    
+
     return EXIT_SUCCESS;
 }

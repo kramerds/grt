@@ -105,11 +105,13 @@ std::string Util::toString(const bool &b){
     return b ? "1" : "0";
 }
 
-std::string Util::toString(const Float &v){
+
+std::string Util::toString(const double &v){
 	std::stringstream s;
     s << v;
     return s.str();
 }
+
 
 std::string Util::toString(const long double &v){
     std::stringstream s;
@@ -117,11 +119,13 @@ std::string Util::toString(const long double &v){
     return s.str();
 }
 
+
 std::string Util::toString(const float &v){
 	std::stringstream s;
     s << v;
     return s.str();
 }
+
     
 int Util::stringToInt(const std::string &value){
     std::stringstream s( value );

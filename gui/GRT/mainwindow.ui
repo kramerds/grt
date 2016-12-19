@@ -70,7 +70,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab_11">
      <attribute name="title">
@@ -317,6 +317,32 @@
        </property>
        <property name="text">
         <string>In regression mode this is the number of outputs in your regression algorithm.</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="dtwTestButton">
+       <property name="geometry">
+        <rect>
+         <x>650</x>
+         <y>60</y>
+         <width>75</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>DTWTest</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="pipelineTestButton">
+       <property name="geometry">
+        <rect>
+         <x>650</x>
+         <y>95</y>
+         <width>75</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Test Pipeline</string>
        </property>
       </widget>
      </widget>
@@ -6340,7 +6366,7 @@
      <x>0</x>
      <y>0</y>
      <width>1024</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuInfo">
@@ -6354,6 +6380,11 @@
   <action name="mainMenu_about">
    <property name="text">
     <string>mainMenu_about</string>
+   </property>
+  </action>
+  <action name="actionDTW">
+   <property name="text">
+    <string>DTW</string>
    </property>
   </action>
  </widget>

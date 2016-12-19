@@ -213,7 +213,7 @@ void EigenvalueDecomposition::tql2(){
                 // Compute implicit shift
                 Float g = realEigenvalues[l];
                 Float p = (realEigenvalues[l+1] - g) / (2.0 * complexEigenvalues[l]);
-                Float r = hypot(p,1.0);
+                Float r = hypot(p,(Float)1.0);
                 if (p < 0) {
                     r = -r;
                 }
