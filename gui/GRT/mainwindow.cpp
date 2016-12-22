@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <GRT/GRT.h>
+
 using namespace GRT;
 using namespace std;
 unsigned int MainWindow::numInstances = 0;
@@ -187,6 +188,8 @@ bool MainWindow::initDataIOView(){
     ui->dataIO_enableOSCInputButton->setChecked( true );
     ui->dataIO_enableMouseInputButton->setCheckable( true );
     ui->dataIO_enableMouseInputButton->setChecked( false );
+    ui->dataIO_enableTrichItInputButton->setCheckable( true );
+    ui->dataIO_enableTrichItInputButton->setChecked( false );
     ui->dataIO_oscIncomingPortSpinBox->setRange(1,65535);
     ui->dataIO_numInputDimensionsField->setText( QString::number( 1 )  );
     ui->dataIO_targetVectorSizeField->setText( QString::number( 1 )  );
@@ -675,6 +678,7 @@ bool MainWindow::initSignalsAndSlots(){
     connect(ui->dataIO_infoButton, SIGNAL(clicked()), this, SLOT(showDataIOInfo()));
     connect(ui->dataIO_enableOSCInputButton, SIGNAL(clicked()), this, SLOT(updateOSCInput()));
     connect(ui->dataIO_enableMouseInputButton, SIGNAL(clicked()), this, SLOT(updateMouseInput()));
+    connect(ui->dataIO_enableTrichItInputButton, SIGNAL(clicked()), this, SLOT(updateTrichItInput()));
     connect(ui->dataIO_enableOSCCommandsButton, SIGNAL(clicked()), this, SLOT(updateOSCControlCommands()));
     connect(ui->dataIO_mainDataAddressTextField, SIGNAL(editingFinished()), this, SLOT(updateDataAddress()));
     connect(ui->dataIO_oscIncomingPortSpinBox, SIGNAL(valueChanged(int)), &core, SLOT(resetOSCServer(const int)));
@@ -1243,6 +1247,121 @@ void MainWindow::updateMouseInput(){
 
     }
 
+}
+
+void MainWindow::updateTrichItInput()
+{
+    if(serial.isOpen())
+    {
+        disconnect(&serial, SIGNAL(readyRead()), this, SLOT(readSerialData()));
+        serial.close();
+    }
+
+    if(ui->dataIO_enableTrichItInputButton->isChecked())
+    {
+        //Set the number of inputs to 3 (for the [x y z] values of the trichit accelerometer)
+        setNumInputs( 3 );
+
+        // Example use QSerialPortInfo
+        foreach (const QSerialPortInfo &info, QSerialPortInfo::availablePorts())
+        {
+            //qDebug() << "Name : " << info.portName();
+            //qDebug() << "Description : " << info.description();
+            //qDebug() << "Manufacturer: " << info.manufacturer();
+
+            if(info.manufacturer() == "FTDI" && info.description() == "USB Serial Port")
+            {
+                // Example use QSerialPort
+                serial.setPort(info);
+                serial.setBaudRate(3000000);
+                serial.setDataBits(QSerialPort::Data8);
+                serial.setParity(QSerialPort::NoParity);
+                serial.setStopBits(QSerialPort::OneStop);
+                serial.setFlowControl(QSerialPort::NoFlowControl);
+
+                if (serial.open(QIODevice::ReadWrite))
+                {
+                    bool successfulRead = false;
+                    while(serial.waitForReadyRead(1000) && serial.canReadLine())
+                    {
+                        QByteArray bytes = serial.readLine(100);
+                        QString line(bytes);
+                        if(parseTrichItLine(line))
+                        {
+                            //qDebug() << "Found TrichIt Device on  " << info.portName();
+                            emit updateInfoText( QString("Found TrichIt Device on "+ info.portName()).toStdString());
+                            successfulRead = true;
+                            connect(&serial, SIGNAL(readyRead()), this, SLOT(readSerialData()));
+                            return;
+                        }
+                        else
+                        {
+                            emit updateWarningText( QString("Could not parse line from TrichItDevice: " + line).toStdString());
+                        }
+                    }
+
+                    if(!successfulRead)
+                        serial.close(); //move on to the next serial port.
+                }
+            }
+        }
+        QMessageBox msgBox;
+        msgBox.setText("No TrichIt sensors could be found on this system.");
+        emit updateInfoText( "No TrichIt sensors could be found on this system." );
+        msgBox.exec();
+        ui->dataIO_enableTrichItInputButton->setChecked(false);
+    }
+}
+
+void MainWindow::readSerialData()
+{
+    while(serial.canReadLine())
+    {
+        QByteArray bytes = serial.readLine(100);
+        QString line(bytes);
+        if(!parseTrichItLine(line))
+        {
+            emit updateWarningText( QString("Could not parse line from TrichItDevice: " + line).toStdString());
+        }
+    }
+}
+
+bool MainWindow::parseTrichItLine(QString line)
+{
+    if( ui->dataIO_enableTrichItInputButton->isChecked() )
+    {
+        line = line.simplified();
+        QStringList list = line.replace( " ", "" ).split(',');
+
+        if(list.length() <= 4)
+            return false;
+        QString timestamp = list[0];
+        QString subsystem = list[1];
+        QString level = list[2];
+
+        if(subsystem == "IMU" && level == "Data")
+        {
+            //Generate a dummy OSC data message for the serial input line.
+            GRT::VectorDouble trichItData(3);
+            trichItData[0] = list[3].toFloat();
+            trichItData[1] = list[4].toFloat();
+            trichItData[2] = list[5].toFloat();
+
+            OSCMessagePtr msg( new OSCMessage );
+
+            msg->setSenderAddress( "localhost" );
+            msg->setAddressPattern( core.getIncomingDataAddress() );
+            for(int i = 0;i< trichItData.getSize();i++)
+            {
+                msg->addArg( trichItData[i] );
+            }
+
+            //Add the message to the OSC server, this will make it appear like an external message
+            core.addMessaage( msg );
+            return true;
+        }
+    }
+    return false;
 }
 
 void MainWindow::updateOSCControlCommands(){

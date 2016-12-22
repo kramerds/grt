@@ -319,32 +319,6 @@
         <string>In regression mode this is the number of outputs in your regression algorithm.</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="dtwTestButton">
-       <property name="geometry">
-        <rect>
-         <x>650</x>
-         <y>60</y>
-         <width>75</width>
-         <height>23</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>DTWTest</string>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="pipelineTestButton">
-       <property name="geometry">
-        <rect>
-         <x>650</x>
-         <y>95</y>
-         <width>75</width>
-         <height>23</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Test Pipeline</string>
-       </property>
-      </widget>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_12">
@@ -600,6 +574,19 @@
        </property>
        <property name="text">
         <string>Enable Mouse Input</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="dataIO_enableTrichItInputButton">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>0</y>
+         <width>231</width>
+         <height>32</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Enable TrichIt! Input</string>
        </property>
       </widget>
      </widget>

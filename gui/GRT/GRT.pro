@@ -7,7 +7,7 @@
 #NOTE: Have a look at the GRT GUI README before attempting to build this project
 
 QT += core gui
-
+QT += serialport
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 
 #OSX flags

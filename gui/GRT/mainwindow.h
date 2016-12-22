@@ -12,6 +12,8 @@
 #include <QListView>
 #include <QMouseEvent>
 #include <QShortcut>
+#include <QSerialPort>
+#include <QSerialPortInfo>
 #include "Core.h"
 #include "timeseriesgraph.h"
 #include "bargraph.h"
@@ -179,6 +181,8 @@ private slots:
     void showDataIOInfo();
     void updateOSCInput();
     void updateMouseInput();
+    void updateTrichItInput();
+    void readSerialData();
     void updateOSCControlCommands();
     void resetOSCServer(const int port);
     void resetOSCClient();
@@ -306,6 +310,7 @@ private slots:
     void on_pipelineTestButton_clicked();
 
 private:
+    bool parseTrichItLine(QString line);
     bool initMainMenu();
     bool initSetupView();
     bool initDataIOView();
@@ -350,6 +355,7 @@ private:
 
     GRT::SwipeDetector swipeDetector;
 
+    QSerialPort serial;
 };
 
 #endif // MAINWINDOW_H
